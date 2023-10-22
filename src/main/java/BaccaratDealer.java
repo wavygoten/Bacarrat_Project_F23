@@ -6,7 +6,7 @@
  Course: CS 342, Fall 2023.
  System: Windows using Intellij
  Starter Code Author: Mark Hallenbeck
- Student Authors: Adrian Lopez, Ihsaan
+ Student Authors: Adrian Lopez, Ihsaan Bijapuri
  *
  *************************/
 
@@ -51,9 +51,9 @@ public class BaccaratDealer {
 
         // degbuggin print statements
         for(int a = 0; a < hand.size(); a++){
-            System.out.print(.get(a).cardValue());
+            System.out.print(.get(a).value);
             System.out.print(" ");
-            System.out.println(deck.get(a).suiteValue());
+            System.out.println(deck.get(a).suite);
 
         }
         
@@ -76,9 +76,9 @@ public class BaccaratDealer {
     }
     public void print(){
         for(int a = 0; a < deckSize(); a++){
-            System.out.print(deck.get(a).cardValue());
+            System.out.print(deck.get(a).value);
             System.out.print(" ");
-            System.out.println(deck.get(a).suiteValue());
+            System.out.println(deck.get(a).suite);
 
         }
         System.out.print("Deck Size: ");
