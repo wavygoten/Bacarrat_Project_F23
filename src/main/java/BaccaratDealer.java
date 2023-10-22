@@ -43,10 +43,21 @@ public class BaccaratDealer {
     }
     // dealHand will deal two cards off the top of the deck, and returns them in an ArrayList<Card>
     public ArrayList<Card> dealHand(){
-        int topofDeck = deckSize() - 1; // value at the top of our deck
         ArrayList<Card> hand = new ArrayList<>();
-        hand.add(deck.remove(topofDeck));
-        hand.add(deck.remove(topofDeck));
+        int cardOne = deckSize() - 1; // value at the top of our deck
+        hand.add(deck.remove(cardOne));
+        int cardTwo = deckSize() - 1;
+        hand.add(deck.remove(cardTwo));
+
+        // degbuggin print statements
+        for(int a = 0; a < hand.size(); a++){
+            System.out.print(.get(a).cardValue());
+            System.out.print(" ");
+            System.out.println(deck.get(a).suiteValue());
+
+        }
+        
+
         return hand;
     }
     // drawOne will deal a single card from the top of the deck and returns it
