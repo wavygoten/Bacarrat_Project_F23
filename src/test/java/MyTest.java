@@ -1,13 +1,18 @@
-import static org.junit.jupiter.api.Assertions.fail;
-
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.BeforeAll;
 
 class MyTest {
 
-	@Test
-	void test() {
-		fail("Not yet implemented");
-		fail("not yet");
+	static BaccaratDealer bd = new BaccaratDealer();
+
+	@BeforeAll
+	static void setup() {
+		bd.generateDeck();
 	}
+
+	// @Test
+	// void test() {
+	// bd.print();
+	// fail("Not yet implemented");
+	// }
 
 }

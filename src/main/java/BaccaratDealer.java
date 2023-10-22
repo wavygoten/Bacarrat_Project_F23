@@ -7,7 +7,7 @@
  Course: CS 342, Fall 2023.
  System: Windows using Intellij
  Starter Code Author: Mark Hallenbeck
- Student Authors: Adrian Lopez, Ihsaan
+ Student Authors: Adrian Lopez, Ihsaan Bijapuri
  *
  *************************/
 
