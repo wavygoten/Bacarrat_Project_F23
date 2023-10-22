@@ -25,6 +25,7 @@ public class BaccaratDealer {
     // implement the 0 value logic orrr what. so feel free to change it if you want
     // to
     public void generateDeck() {
+        deck.clear(); // make sure we have empty deck before generating
         String suite = "";
         int face10s = 0;
         for (int j = 0; j < 4; j++) {
@@ -56,15 +57,6 @@ public class BaccaratDealer {
         hand.add(deck.remove(cardOne));
         int cardTwo = deckSize() - 1;
         hand.add(deck.remove(cardTwo));
-
-        // degbuggin print statements
-        for (int a = 0; a < hand.size(); a++) {
-            // System.out.print(get(a).cardValue());
-            // System.out.print(" ");
-            // System.out.println(deck.get(a).suiteValue());
-
-        }
-
         return hand;
     }
 
