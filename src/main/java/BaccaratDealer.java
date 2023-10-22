@@ -80,9 +80,9 @@ public class BaccaratDealer {
 
     public void print() {
         for (int a = 0; a < deckSize(); a++) {
-            System.out.print(deck.get(a).cardValue());
+            System.out.print(deck.get(a).value);
             System.out.print(" ");
-            System.out.println(deck.get(a).suiteValue());
+            System.out.println(deck.get(a).suite);
 
         }
         System.out.print("Deck Size: ");
