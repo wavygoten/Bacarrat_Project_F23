@@ -1,16 +1,24 @@
-import javafx.animation.FadeTransition;
-import javafx.animation.PauseTransition;
-import javafx.animation.RotateTransition;
-import javafx.animation.SequentialTransition;
+import java.util.ArrayList;
+
 import javafx.application.Application;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import javafx.util.Duration;
 
 public class BaccaratGame extends Application {
+	private ArrayList<Card> playerHand;
+	private ArrayList<Card> bankerHand;
+	private BaccaratDealer theDealer;
+	private double currentBet;
+	private double totalWinnings;
+
+	public double evaluateWinnings() {
+
+		return 1;
+	}
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
@@ -21,33 +29,28 @@ public class BaccaratGame extends Application {
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		// TODO Auto-generated method stub
-		primaryStage.setTitle("Welcome to JavaFX");
+		primaryStage.setTitle("Adrian Lopez Homework 3");
+		VBox mainMenu = new VBox();
+		TextField welcome = new TextField("Welcome to Baccarat");
+		welcome.setStyle("-fx-control-inner-background: derive(-fx-base,80%);");
 
-		Rectangle rect = new Rectangle(100, 40, 100, 100);
-		rect.setArcHeight(50);
-		rect.setArcWidth(50);
-		rect.setFill(Color.VIOLET);
+		TextField bet = new TextField("0$");
+		Button info = new Button("?");
+		Button playGame = new Button("Play Game");
+		mainMenu.getChildren().addAll(welcome, bet, playGame);
+		info.setStyle(
+				"-fx-background-radius: 50em; -fx-min-width: 50px; -fx-min-height: 50px; -fx-max-width: 50px; -fx-max-height: 50px;");
+		bet.setStyle("-fx-pref-width: 50; -fx-pref-height: 40;");
+		BorderPane pane = new BorderPane();
+		pane.setStyle(
+				"-fx-border-color: #00008B;" + // navy blue border
+						"-fx-background-color: linear-gradient(to bottom, #3498db, #ffffff);" + // blue gradient bg
+						"-fx-border-width: 4px;" // thickness of border
+		);
+		pane.setCenter(mainMenu);
+		pane.setBottom(info);
+		Scene scene = new Scene(pane, 700, 700);
 
-		RotateTransition rt = new RotateTransition(Duration.millis(5000), rect);
-		rt.setByAngle(270);
-		rt.setCycleCount(4);
-		rt.setAutoReverse(true);
-		SequentialTransition seqTransition = new SequentialTransition(
-				new PauseTransition(Duration.millis(500)),
-				rt);
-		seqTransition.play();
-
-		FadeTransition ft = new FadeTransition(Duration.millis(5000), rect);
-		ft.setFromValue(1.0);
-		ft.setToValue(0.3);
-		ft.setCycleCount(4);
-		ft.setAutoReverse(true);
-
-		ft.play();
-		BorderPane root = new BorderPane();
-		root.setCenter(rect);
-
-		Scene scene = new Scene(root, 700, 700);
 		primaryStage.setScene(scene);
 		primaryStage.show();
 
