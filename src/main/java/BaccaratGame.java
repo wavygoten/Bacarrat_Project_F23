@@ -30,6 +30,15 @@ public class BaccaratGame extends Application {
 	public void start(Stage primaryStage) throws Exception {
 		// TODO Auto-generated method stub
 		primaryStage.setTitle("Adrian Lopez Homework 3");
+		BorderPane welcomePane = setupWelcomePage();
+		Scene scene = new Scene(welcomePane, 700, 700);
+		scene.getStylesheets().add("styles.css");
+		primaryStage.setScene(scene);
+		primaryStage.show();
+
+	}
+
+	private BorderPane setupWelcomePage() {
 		VBox mainMenu = new VBox();
 		TextField welcome = new TextField("Welcome to Baccarat");
 		welcome.getStyleClass().add("welcome");
@@ -43,11 +52,7 @@ public class BaccaratGame extends Application {
 		pane.getStyleClass().add("pane");
 		pane.setCenter(mainMenu);
 		pane.setBottom(info);
-		Scene scene = new Scene(pane, 700, 700);
-		scene.getStylesheets().add("styles.css");
-		primaryStage.setScene(scene);
-		primaryStage.show();
-
+		return pane;
 	}
 
 }
