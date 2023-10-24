@@ -67,21 +67,17 @@ public class BaccaratGame extends Application {
 		MenuItem exit = new MenuItem("Exit");
 		MenuItem re = new MenuItem("Restart");
 		// Menu re = new Menu("Restart");
-		exit.setOnAction(e -> {
-			Platform.exit();
-			System.exit(0);
-		});
-		re.setOnAction(e -> freshRestart());
+
 		mb.getMenus().add(options);
 		options.getItems().addAll(exit, re);
 
 		TextField bankerTotal = new TextField("Banker total");
 		bankerTotal.setEditable(false);
-		TextField intBankerTotal = new TextField("$0");
+		TextField intBankerTotal = new TextField("0");
 		intBankerTotal.setEditable(false);
 		TextField playerTotal = new TextField("Player total");
 		playerTotal.setEditable(false);
-		TextField intPlayerTotal = new TextField("$0");
+		TextField intPlayerTotal = new TextField("0");
 		intPlayerTotal.setEditable(false);
 		TextField winnings = new TextField("Winnings");
 		winnings.setEditable(false);
@@ -115,19 +111,21 @@ public class BaccaratGame extends Application {
 		primaryStage.setScene(scene);
 		primaryStage.show();
 
+		// button functions below
 		playButton.setOnAction(e -> {
 			BaccaratGameLogic logic = new BaccaratGameLogic();
 
+			this.theDealer.generateDeck();
 			// fix error here
 			this.playerHand = this.theDealer.dealHand(); // 4
 
 			this.bankerHand = this.theDealer.dealHand(); // 3
+			// this.theDealer.print();
 			// for (int i = 0; i < this.playerHand.size(); i++) {
 			// System.out.println(this.playerHand.get(i).value);
 			// }
 			intBankerTotal.setText(String.valueOf(logic.handTotal(this.playerHand)));
 			intPlayerTotal.setText(String.valueOf(logic.handTotal(this.bankerHand)));
-
 			// check draw one
 			// player
 			if (logic.evaluatePlayerDraw(this.playerHand)) {
@@ -135,6 +133,8 @@ public class BaccaratGame extends Application {
 				intPlayerTotal.setText(String.valueOf(logic.handTotal(this.bankerHand)));
 
 			}
+
+			// banker
 			if (this.playerHand.size() > 2) {
 				if (logic.evaluateBankerDraw(this.playerHand, this.playerHand.get(2))) {
 					this.bankerHand.add(this.theDealer.drawOne());
@@ -147,6 +147,21 @@ public class BaccaratGame extends Application {
 				}
 			}
 
+		});
+
+		exit.setOnAction(e -> {
+			Platform.exit();
+			System.exit(0);
+		});
+		re.setOnAction(e -> {
+			this.currentBalance = 100;
+			this.theDealer.generateDeck();
+			this.theDealer.shuffleDeck();
+			this.currentBet = 0;
+			this.totalWinnings = 0;
+			this.bankerHand.clear();
+			this.playerHand.clear();
+			playButton.fire();
 		});
 
 	}

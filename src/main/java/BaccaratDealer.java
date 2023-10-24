@@ -27,7 +27,6 @@ public class BaccaratDealer {
     public void generateDeck() {
         deck.clear(); // make sure we have empty deck before generating
         String suite = "";
-        int face10s = 0;
         for (int j = 0; j < 4; j++) {
             if (j == 0)
                 suite = "Spades";
@@ -38,7 +37,7 @@ public class BaccaratDealer {
             if (j == 3)
                 suite = "Clubs";
             for (int i = 1; i < 14; i++) {
-                Card newCard = new Card(suite, face10s);
+                Card newCard = new Card(suite, i);
                 deck.add(newCard);
             }
         }
@@ -48,13 +47,8 @@ public class BaccaratDealer {
     // ArrayList<Card>
     public ArrayList<Card> dealHand() {
         ArrayList<Card> hand = new ArrayList<>();
-        int cardOne = deckSize() - 1; // value at the top of our deck
-        hand.add(deck.remove(cardOne));
-        int cardTwo = deckSize() - 1;
-        hand.add(deck.remove(cardTwo));
-        for (int i = 0; i < hand.size(); i++) {
-            System.out.println(hand.get(i).value);
-        }
+        hand.add(drawOne());
+        hand.add(drawOne());
         return hand;
     }
 
