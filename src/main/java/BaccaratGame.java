@@ -59,18 +59,12 @@ public class BaccaratGame extends Application {
 		VBox tieVbox = new VBox(tieBet, tieBetAmount);
 		VBox bankerVbox = new VBox(bankerBet, bankerBetAmount);
 		HBox bottomBar = new HBox(playerVbox, tieVbox, bankerVbox, spacing4, playButton);
-
-		// Button Exit = new Button("Exit");
-		// Button Re = new Button("Fresh Start");
 		MenuBar mb = new MenuBar();
 		Menu options = new Menu("Options");
 		MenuItem exit = new MenuItem("Exit");
-		MenuItem re = new MenuItem("Restart");
-		// Menu re = new Menu("Restart");
-
+		MenuItem re = new MenuItem("Fresh Start");
 		mb.getMenus().add(options);
 		options.getItems().addAll(exit, re);
-
 		TextField bankerTotal = new TextField("Banker total");
 		bankerTotal.setEditable(false);
 		TextField intBankerTotal = new TextField("0");
@@ -115,7 +109,7 @@ public class BaccaratGame extends Application {
 		playButton.setOnAction(e -> {
 			BaccaratGameLogic logic = new BaccaratGameLogic();
 
-			this.theDealer.generateDeck();
+			this.theDealer.shuffleDeck();
 			// fix error here
 			this.playerHand = this.theDealer.dealHand(); // 4
 
@@ -155,8 +149,6 @@ public class BaccaratGame extends Application {
 		});
 		re.setOnAction(e -> {
 			this.currentBalance = 100;
-			this.theDealer.generateDeck();
-			this.theDealer.shuffleDeck();
 			this.currentBet = 0;
 			this.totalWinnings = 0;
 			this.bankerHand.clear();

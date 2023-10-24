@@ -62,7 +62,11 @@ public class BaccaratDealer {
     // the cards in that ArrayList<Card>
     public void shuffleDeck() {
         generateDeck();
-        Collections.shuffle(deck);
+        int shuffleCount = (int) (Math.random() * 10) + 1;
+        // System.out.println(shuffleCount);
+        for (int i = 0; i < shuffleCount; i++) {
+            Collections.shuffle(deck);
+        }
     }
 
     // deckSize returns how many cards are in this.deck at any given time
