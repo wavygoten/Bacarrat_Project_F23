@@ -2,13 +2,16 @@ import java.util.ArrayList;
 
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
@@ -19,7 +22,6 @@ public class BaccaratGame extends Application {
 	private double currentBalance = 0;
 	private double currentBet = 0;
 	private double totalWinnings = 0;
-	private BaccaratGameLogic logic = new BaccaratGameLogic();
 
 	public double evaluateWinnings() {
 
@@ -39,14 +41,25 @@ public class BaccaratGame extends Application {
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		// TODO Auto-generated method stub
-		TextField bankerTotal = new TextField("Banker total");
-		TextField intBankerTotal = new TextField("$0");
-		TextField playerTotal = new TextField("Player total");
-		TextField intPlayerTotal = new TextField("$0");
-		TextField winnings = new TextField("Winnings");
-		TextField intWinnings = new TextField("$0");
-		TextField balance = new TextField("Balance");
-		TextField intBalance = new TextField("$0");
+		primaryStage.setTitle("Baccarat Game");
+		BorderPane pane = new BorderPane();
+
+		TextField playerBet = new TextField("Player Bet");
+		TextField playerBetAmount = new TextField("$0");
+		TextField tieBet = new TextField("Tie Bet");
+		TextField tieBetAmount = new TextField("$0");
+		TextField bankerBet = new TextField("Banker Bet");
+		TextField bankerBetAmount = new TextField("$0");
+		Button playButton = new Button("Play Game");
+
+		Region spacing4 = new Region();
+		spacing4.setPrefWidth(40);
+
+		VBox playerVbox = new VBox(playerBet, playerBetAmount);
+		VBox tieVbox = new VBox(tieBet, tieBetAmount);
+		VBox bankerVbox = new VBox(bankerBet, bankerBetAmount);
+		HBox bottomBar = new HBox(playerVbox, tieVbox, bankerVbox, spacing4, playButton);
+
 		// Button Exit = new Button("Exit");
 		// Button Re = new Button("Fresh Start");
 		MenuBar mb = new MenuBar();
@@ -62,27 +75,86 @@ public class BaccaratGame extends Application {
 		mb.getMenus().add(options);
 		options.getItems().addAll(exit, re);
 
-		// HBox topBar = new HBox(tb);
-		VBox leftSide = new VBox(bankerTotal, intBankerTotal, playerTotal, intPlayerTotal, winnings, intWinnings,
-				balance, intBalance);
-		HBox gamePane = new HBox();
-		HBox bottomBar = new HBox();
-		// totalMenu.setAlignment(Pos.CENTER);
-		BorderPane pane = new BorderPane(null, mb, gamePane, bottomBar, leftSide);
+		TextField bankerTotal = new TextField("Banker total");
+		bankerTotal.setEditable(false);
+		TextField intBankerTotal = new TextField("$0");
+		intBankerTotal.setEditable(false);
+		TextField playerTotal = new TextField("Player total");
+		playerTotal.setEditable(false);
+		TextField intPlayerTotal = new TextField("$0");
+		intPlayerTotal.setEditable(false);
+		TextField winnings = new TextField("Winnings");
+		winnings.setEditable(false);
+		TextField intWinnings = new TextField("$0");
+		intWinnings.setEditable(false);
+		TextField balance = new TextField("Balance");
+		balance.setEditable(false);
+		TextField intBalance = new TextField("$0");
+		intBalance.setEditable(false);
+		Region spacing1 = new Region();
+		spacing1.setPrefHeight(20);
+		Region spacing2 = new Region();
+		spacing2.setPrefHeight(20);
+		Region spacing3 = new Region();
+		spacing3.setPrefHeight(20);
+		VBox totalMenu = new VBox(bankerTotal, intBankerTotal, spacing1, playerTotal, intPlayerTotal, spacing2,
+				winnings, intWinnings, spacing3, balance, intBalance);
+
+		totalMenu.setAlignment(Pos.CENTER);
+		pane.setLeft(totalMenu);
+		pane.setTop(mb);
+		// pane.setRight(options);
+		pane.setBottom(bottomBar);
+		bankerTotal.getStyleClass().add("transparent_border");
+		playerTotal.getStyleClass().add("transparent_border");
+		winnings.getStyleClass().add("transparent_border");
+		balance.getStyleClass().add("transparent_border");
 
 		Scene scene = new Scene(pane, 700, 700);
 		scene.getStylesheets().add("styles.css");
 		primaryStage.setScene(scene);
 		primaryStage.show();
 
+		playButton.setOnAction(e -> {
+			BaccaratGameLogic logic = new BaccaratGameLogic();
+
+			// fix error here
+			this.playerHand = this.theDealer.dealHand(); // 4
+
+			this.bankerHand = this.theDealer.dealHand(); // 3
+			// for (int i = 0; i < this.playerHand.size(); i++) {
+			// System.out.println(this.playerHand.get(i).value);
+			// }
+			intBankerTotal.setText(String.valueOf(logic.handTotal(this.playerHand)));
+			intPlayerTotal.setText(String.valueOf(logic.handTotal(this.bankerHand)));
+
+			// check draw one
+			// player
+			if (logic.evaluatePlayerDraw(this.playerHand)) {
+				this.playerHand.add(this.theDealer.drawOne());
+				intPlayerTotal.setText(String.valueOf(logic.handTotal(this.bankerHand)));
+
+			}
+			if (this.playerHand.size() > 2) {
+				if (logic.evaluateBankerDraw(this.playerHand, this.playerHand.get(2))) {
+					this.bankerHand.add(this.theDealer.drawOne());
+					intBankerTotal.setText(String.valueOf(logic.handTotal(this.playerHand)));
+				}
+			} else {
+				if (logic.evaluateBankerDraw(this.playerHand, null)) {
+					this.bankerHand.add(this.theDealer.drawOne());
+					intBankerTotal.setText(String.valueOf(logic.handTotal(this.playerHand)));
+				}
+			}
+
+		});
+
 	}
 
 	private void play() {
-		this.theDealer.generateDeck();
-		this.bankerHand = this.theDealer.dealHand();
-		this.playerHand = this.theDealer.dealHand();
-		int playerTotal = logic.handTotal(playerHand);
-		int bankerTotal = logic.handTotal(bankerHand);
+
+		// bankTextField.setText(String.valueOf(bankerTotal));
+		// playerTextField.setText(String.valueOf(playerTotal));
 
 	}
 
@@ -95,7 +167,7 @@ public class BaccaratGame extends Application {
 		this.totalWinnings = 0;
 		this.bankerHand.clear();
 		this.playerHand.clear();
-		this.play();
+		// this.play();
 		// do new play game
 
 	}

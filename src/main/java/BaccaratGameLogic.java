@@ -1,7 +1,11 @@
 import java.util.ArrayList;
 
 public class BaccaratGameLogic {
-    private boolean playerDrew = false;
+    private boolean playerDrew;
+
+    public BaccaratGameLogic() {
+        playerDrew = false;
+    }
 
     public String whoWon(ArrayList<Card> hand1, ArrayList<Card> hand2) {
         int playerTotal = handTotal(hand1);
@@ -24,11 +28,7 @@ public class BaccaratGameLogic {
         for (int i = 0; i < hand.size(); i++) {
             total += hand.get(i).value;
         }
-        if (total >= 10)
-            return total % 10;
-        if (total >= 20)
-            return total % 20;
-        return total; // adds hand together
+        return total % 10; // adds hand together
     }
 
     public boolean evaluateBankerDraw(ArrayList<Card> hand, Card playerCard) {

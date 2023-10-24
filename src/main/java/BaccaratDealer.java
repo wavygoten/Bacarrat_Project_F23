@@ -52,6 +52,9 @@ public class BaccaratDealer {
         hand.add(deck.remove(cardOne));
         int cardTwo = deckSize() - 1;
         hand.add(deck.remove(cardTwo));
+        for (int i = 0; i < hand.size(); i++) {
+            System.out.println(hand.get(i).value);
+        }
         return hand;
     }
 
