@@ -3,6 +3,17 @@ import javafx.animation.PauseTransition;
 import javafx.animation.RotateTransition;
 import javafx.animation.SequentialTransition;
 import javafx.application.Application;
+import javafx.application.Application;
+
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
+
+import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.*;
+import javafx.stage.Stage;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -44,33 +55,30 @@ public class BaccaratGame extends Application {
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		// TODO Auto-generated method stub
-		primaryStage.setTitle("Adrian Lopez Homework 3");
-		VBox mainMenu = new VBox();
-		TextField welcome = new TextField("Welcome to Baccarat");
-		welcome.setStyle("-fx-control-inner-background: derive(-fx-base,80%);");
-
-
-		TextField bet = new TextField("0$");
-		Button info = new Button("?");
-		Button playGame = new Button("Play Game");
-		mainMenu.getChildren().addAll(welcome,bet, playGame);
-		info.setStyle("-fx-background-radius: 50em; -fx-min-width: 50px; -fx-min-height: 50px; -fx-max-width: 50px; -fx-max-height: 50px;");
-		bet.setStyle("-fx-pref-width: 50; -fx-pref-height: 40;");
+		primaryStage.setTitle("Baccarat Game");
 		BorderPane pane = new BorderPane();
-		pane.setStyle(
-				"-fx-border-color: #00008B;" + // navy blue border
-				"-fx-background-color: linear-gradient(to bottom, #3498db, #ffffff);" + // blue gradient bg
-				"-fx-border-width: 4px;" // thickness of border
-		);
-		pane.setCenter(mainMenu);
-		pane.setBottom(info);
-		Scene scene = new Scene(pane, 700,700);
 
+
+		TextField bankerTotal = new TextField("Banker total");
+		TextField intBankerTotal = new TextField("$0");
+		TextField playerTotal = new TextField("Player total");
+		TextField intPlayerTotal = new TextField("$0");
+		TextField winnings = new TextField("Winnings");
+		TextField intWinnings = new TextField("$0");
+		TextField balance = new TextField("Balance");
+		TextField intBalance = new TextField("$0");
+		Button options = new Button("Options");
+		VBox totalMenu = new VBox(bankerTotal, intBankerTotal, playerTotal, intPlayerTotal, winnings, intWinnings, balance, intBalance);
+		totalMenu.setAlignment(Pos.CENTER);
+		pane.setLeft(totalMenu);
+		pane.setRight(options);
+		bankerTotal.getStyleClass().add("welcome");
+
+
+
+		Scene scene = new Scene(pane, 700,700);
+		scene.getStylesheets().add("styles.css");
 		primaryStage.setScene(scene);
 		primaryStage.show();
-
-
-
 	}
-
 }
