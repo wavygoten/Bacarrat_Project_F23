@@ -38,13 +38,8 @@ public class BaccaratDealer {
             if (j == 3)
                 suite = "Clubs";
             for (int i = 1; i < 14; i++) {
-                if (i == 10 || i == 11 || i == 12 || i == 13) {
-                    Card newCard = new Card(suite, face10s);
-                    deck.add(newCard);
-                } else {
-                    Card newCard = new Card(suite, i);
-                    deck.add(newCard);
-                }
+                Card newCard = new Card(suite, face10s);
+                deck.add(newCard);
             }
         }
     }
