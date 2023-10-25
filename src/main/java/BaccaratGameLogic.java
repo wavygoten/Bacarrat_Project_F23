@@ -26,7 +26,7 @@ public class BaccaratGameLogic {
             return 0; // empty hand
         int total = 0;
         for (int i = 0; i < hand.size(); i++) {
-            total += hand.get(i).value;
+            total += hand.get(i).value >= 10 ? 0 : hand.get(i).value;
         }
         return total % 10; // adds hand together
     }

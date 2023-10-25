@@ -124,21 +124,27 @@ public class BaccaratGame extends Application {
 			// player
 			if (logic.evaluatePlayerDraw(this.playerHand)) {
 				this.playerHand.add(this.theDealer.drawOne());
-				intPlayerTotal.setText(String.valueOf(logic.handTotal(this.bankerHand)));
-
+				intPlayerTotal.setText(String.valueOf(logic.handTotal(this.playerHand)));
 			}
 
 			// banker
 			if (this.playerHand.size() > 2) {
 				if (logic.evaluateBankerDraw(this.playerHand, this.playerHand.get(2))) {
 					this.bankerHand.add(this.theDealer.drawOne());
-					intBankerTotal.setText(String.valueOf(logic.handTotal(this.playerHand)));
+					intBankerTotal.setText(String.valueOf(logic.handTotal(this.bankerHand)));
 				}
 			} else {
 				if (logic.evaluateBankerDraw(this.playerHand, null)) {
 					this.bankerHand.add(this.theDealer.drawOne());
-					intBankerTotal.setText(String.valueOf(logic.handTotal(this.playerHand)));
+					intBankerTotal.setText(String.valueOf(logic.handTotal(this.bankerHand)));
 				}
+			}
+
+			for (int i = 0; i < this.playerHand.size(); i++) {
+				System.out.println("Player Hand: " + this.playerHand.get(i).value);
+			}
+			for (int i = 0; i < this.bankerHand.size(); i++) {
+				System.out.println("Banker Hand: " + this.bankerHand.get(i).value);
 			}
 
 		});
