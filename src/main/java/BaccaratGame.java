@@ -177,20 +177,12 @@ public class BaccaratGame extends Application {
 				currentBet = Integer.valueOf(playerBetAmount.getText());
 				betOn = "P";
 			}
-			// System.out.println(betOn);
-			// this.currentBet = playerBetAmount.getText() != null ?
-			// Integer.valueOf(playerBetAmount.getText())
-			// : tieBetAmount.getText() != null ? Integer.valueOf(tieBetAmount.getText())
-			// : bankerBetAmount.getText() != null ?
-			// Integer.valueOf(bankerBetAmount.getText()) : 0;
 			if (currentBet <= this.currentBalance) {
 				this.theDealer.shuffleDeck();
 				this.playerHand = this.theDealer.dealHand();
 				this.bankerHand = this.theDealer.dealHand();
-				// this.theDealer.print();
 				intBankerTotal.setText(String.valueOf(logic.handTotal(this.bankerHand)));
 				intPlayerTotal.setText(String.valueOf(logic.handTotal(this.playerHand)));
-				// this stuff changes
 				playerCardOneView.setImage(null);
 				playerCardTwoView.setImage(null);
 				playerCardThreeView.setImage(null);
@@ -219,6 +211,7 @@ public class BaccaratGame extends Application {
 					playerCardTwoView.setImage(playerCardTwo);
 					bankerCardOneView.setImage(bankerCardOne);
 					bankerCardTwoView.setImage(bankerCardTwo);
+					// player
 					if (logic.evaluatePlayerDraw(this.playerHand)) {
 						this.playerHand.add(this.theDealer.drawOne());
 						InputStream playerCardThreeStream = new FileInputStream(
@@ -230,7 +223,7 @@ public class BaccaratGame extends Application {
 					}
 
 					// banker
-					if (this.playerHand.size() > 2) {
+					if (this.playerHand.size() > 2) { // player drew
 						if (logic.evaluateBankerDraw(this.playerHand, this.playerHand.get(2))) {
 							this.bankerHand.add(this.theDealer.drawOne());
 							InputStream bankerCardThreeStream = new FileInputStream(
@@ -240,7 +233,7 @@ public class BaccaratGame extends Application {
 							bankerCardThreeView.setImage(bankerCardThree);
 							intBankerTotal.setText(String.valueOf(logic.handTotal(this.bankerHand)));
 						}
-					} else {
+					} else { // player didnt draw
 						if (logic.evaluateBankerDraw(this.playerHand, null)) {
 							this.bankerHand.add(this.theDealer.drawOne());
 							InputStream bankerCardThreeStream = new FileInputStream(
@@ -284,34 +277,6 @@ public class BaccaratGame extends Application {
 					}
 					System.out.println("Round: " + this.roundNumber);
 				}
-
-				// if (logic.evaluatePlayerDraw(this.playerHand)) {
-				// this.playerHand.add(this.theDealer.drawOne());
-				// InputStream playerCardThreeStream = new FileInputStream(
-				// System.getProperty("user.dir") + "/src/main/resources/cardImages"
-				// + getCardImage(this.playerHand.get(2)));
-				// Image cardThree = new Image(playerCardThreeStream);
-				// playerCardThreeView.setImage(cardThree);
-
-				// intPlayerTotal.setText(String.valueOf(logic.handTotal(this.playerHand)));
-				// }
-
-				// // banker
-				// if (this.playerHand.size() > 2) {
-				// if (logic.evaluateBankerDraw(this.playerHand, this.playerHand.get(2))) {
-				// this.bankerHand.add(this.theDealer.drawOne());
-				// intBankerTotal.setText(String.valueOf(logic.handTotal(this.bankerHand)));
-				// }
-				// } else {
-				// if (logic.evaluateBankerDraw(this.playerHand, null)) {
-				// this.bankerHand.add(this.theDealer.drawOne());
-				// intBankerTotal.setText(String.valueOf(logic.handTotal(this.bankerHand)));
-				// }
-				// }
-
-				// calculate who won and either append or dont append winnings to current
-				// balance.
-
 			} else {
 				System.out.println("DONT HAVE ENOUGH BREAD U GAMBLING DEGENERATE");
 			}
