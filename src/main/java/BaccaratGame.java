@@ -1,4 +1,6 @@
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 
@@ -167,16 +169,24 @@ public class BaccaratGame extends Application {
 			BaccaratGameLogic logic = new BaccaratGameLogic();
 			String betOn = "";
 			double currentBet = 0;
-			if (playerBetAmount.getText() == null && tieBetAmount.getText() == null) {
-				currentBet = Integer.valueOf(bankerBetAmount.getText());
-				betOn = "B";
-			} else if (playerBetAmount.getText() == null && bankerBetAmount.getText() == null) {
-				currentBet = Integer.valueOf(tieBetAmount.getText());
-				betOn = "T";
-			} else {
-				currentBet = Integer.valueOf(playerBetAmount.getText());
-				betOn = "P";
+			try {
+				if (playerBetAmount.getText() == null && tieBetAmount.getText() == null) {
+					currentBet = Integer.valueOf(bankerBetAmount.getText());
+					betOn = "B";
+				} else if (playerBetAmount.getText() == null && bankerBetAmount.getText() == null) {
+					currentBet = Integer.valueOf(tieBetAmount.getText());
+					betOn = "T";
+				} else {
+					currentBet = Integer.valueOf(playerBetAmount.getText());
+					betOn = "P";
+				}
+			} catch (NumberFormatException e) {
+				System.out.println("Must enter a bet");
+				event.consume();
+				return;
+				// TODO: handle exception
 			}
+
 			if (currentBet <= this.currentBalance) {
 				this.theDealer.shuffleDeck();
 				this.playerHand = this.theDealer.dealHand();
@@ -244,9 +254,13 @@ public class BaccaratGame extends Application {
 							intBankerTotal.setText(String.valueOf(logic.handTotal(this.bankerHand)));
 						}
 					}
-				} catch (Exception error) {
+				} catch (FileNotFoundException error) {
 					error.printStackTrace();
+					System.out.println("File not found");
 					// TODO: handle exception
+				} catch (IOException error) {
+					error.printStackTrace();
+					System.out.println("IO Error");
 				} finally {
 					String whoWon = logic.handTotal(this.bankerHand) > logic.handTotal(this.playerHand) ? "B"
 							: logic.handTotal(this.bankerHand) < logic.handTotal(this.playerHand) ? "P" : "T";
