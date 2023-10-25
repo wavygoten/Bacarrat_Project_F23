@@ -216,6 +216,19 @@ public class BaccaratGame extends Application {
 			this.bankerHand.clear();
 			this.playerHand.clear();
 			this.roundNumber = 1;
+			intWinnings.setText("$" + String.valueOf(this.totalWinnings));
+			intBalance.setText("$" + String.valueOf(this.currentBalance));
+			intBankerTotal.setText("0");
+			intPlayerTotal.setText("0");
+			bankerBetAmount.setPromptText("$0");
+			bankerBetAmount.setText("");
+			bankerBetAmount.setDisable(true);
+			tieBetAmount.setPromptText("$0");
+			tieBetAmount.setText("");
+			tieBetAmount.setDisable(true);
+			playerBetAmount.setPromptText("$0");
+			playerBetAmount.setText("");
+			playerBetAmount.setDisable(true);
 			// playButton.fire();
 		});
 
