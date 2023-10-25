@@ -37,7 +37,7 @@ public class BaccaratGameLogic {
             return false; // do not draw, stand
         else if (total == 0 || total == 1 || total == 2)
             return true; // draw another card
-        else if ((total == 3 || total == 4 || total == 5) && playerCard.value == 0)
+        else if ((total == 3 || total == 4 || total == 5) && playerDrew && playerCard.value == 0)
             return true;
         else if (total == 3 && (playerCard.value != 8 || !playerDrew))
             return true;
@@ -45,7 +45,7 @@ public class BaccaratGameLogic {
             return true;
         else if (total == 5 && (!playerDrew || (playerCard.value >= 4 && playerCard.value <= 7)))
             return true;
-        else if (total == 6 && (playerCard.value == 6 || playerCard.value == 7))
+        else if (total == 6 && playerDrew && (playerCard.value == 6 || playerCard.value == 7))
             return true;
         return false;
     }
