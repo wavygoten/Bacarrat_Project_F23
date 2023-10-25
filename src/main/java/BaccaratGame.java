@@ -4,6 +4,18 @@ import javafx.animation.RotateTransition;
 import javafx.animation.SequentialTransition;
 import javafx.application.Application;
 import javafx.application.Application;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import javafx.application.Application;
+import javafx.scene.Group;
+import javafx.scene.Scene;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.stage.Stage;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -44,6 +56,11 @@ public class BaccaratGame extends Application {
 
 		return 1;
 	}
+	public String getCardImage(Card card){
+		String cardValue = Integer.toString(card.value); // convert card integer value to string
+		String cardString = "/" + cardValue + card.suite + ".png"; // concatenate int string to suite string to be used as a file path
+		return cardString;
+	}
 
 
 	public static void main(String[] args) {
@@ -58,23 +75,24 @@ public class BaccaratGame extends Application {
 		primaryStage.setTitle("Baccarat Game");
 		BorderPane pane = new BorderPane();
 
-		TextField playerBet = new TextField("Player Bet");
+		Button playerBetButton = new Button("Player Bet");
+		playerBetButton.getStyleClass().add("betbutton");
 		TextField playerBetAmount = new TextField("$0");
-		TextField tieBet = new TextField("Tie Bet");
+
+		Button tieBetButton = new Button("Tie Bet");
 		TextField tieBetAmount = new TextField("$0");
-		TextField bankerBet = new TextField("Banker Bet");
+		Button bankerBetButton = new Button("Banker Bet");
 		TextField bankerBetAmount = new TextField("$0");
 		Button playButton = new Button("Play Game");
+		playButton.getStyleClass().add("playbutton");
 		Region spacing4 = new Region();
-		spacing4.setPrefWidth(40);
+		spacing4.setPrefWidth(135);
 
 
-		VBox playerVbox = new VBox(playerBet, playerBetAmount);
-		VBox tieVbox = new VBox(tieBet, tieBetAmount);
-		VBox bankerVbox = new VBox(bankerBet, bankerBetAmount);
+		VBox playerVbox = new VBox(playerBetButton, playerBetAmount);
+		VBox tieVbox = new VBox(tieBetButton, tieBetAmount);
+		VBox bankerVbox = new VBox(bankerBetButton, bankerBetAmount);
 		HBox bottomBar = new HBox(playerVbox, tieVbox, bankerVbox, spacing4, playButton);
-
-
 
 
 		TextField bankerTotal = new TextField("Banker total");
@@ -102,14 +120,53 @@ public class BaccaratGame extends Application {
 		Button options = new Button("Options");
 		VBox totalMenu = new VBox(bankerTotal, intBankerTotal, spacing1, playerTotal, intPlayerTotal, spacing2, winnings, intWinnings, spacing3, balance, intBalance);
 
-		totalMenu.setAlignment(Pos.CENTER);
-		pane.setLeft(totalMenu);
+
 		pane.setRight(options);
 		pane.setBottom(bottomBar);
 		bankerTotal.getStyleClass().add("transparent_border");
 		playerTotal.getStyleClass().add("transparent_border");
 		winnings.getStyleClass().add("transparent_border");
 		balance.getStyleClass().add("transparent_border");
+
+		Card test = new Card("Spades", 13);
+
+		String filePath = System.getProperty("user.dir") + "/src/main/resources/cardImages" + getCardImage(test);
+
+		InputStream playerCardOneStream = new FileInputStream(filePath);
+		InputStream playerCardTwoStream = new FileInputStream(filePath);
+		Image cardOne = new Image(playerCardOneStream);
+		Image cardTwo = new Image(playerCardTwoStream);
+		ImageView playerCardOneView = new ImageView();
+		ImageView playerCardTwoView = new ImageView();
+
+		playerCardTwoView.setImage(cardTwo);
+		playerCardOneView.setImage(cardOne);
+
+		playerCardTwoView.setX(10);
+		playerCardTwoView.setY(10);
+		playerCardTwoView.setFitWidth(50);
+		playerCardTwoView.setPreserveRatio(true);
+
+		playerCardOneView.setX(10);
+		playerCardOneView.setY(10);
+		playerCardOneView.setFitWidth(50);
+		playerCardOneView.setPreserveRatio(true);
+
+		Region space5 = new Region();
+		space5.setPrefWidth(45);
+		Region space6 = new Region();
+		space6.setPrefWidth(20);
+		Region space7 = new Region();
+		space7.setPrefWidth(20);
+		HBox cards1 = new HBox(playerCardOneView,space5, playerCardTwoView);
+		HBox cards2 = new HBox();
+		TextField playerCards = new TextField("Player");
+		TextField bankerCards = new TextField("Banker");
+		VBox player = new VBox(playerCards, cards1);
+		VBox banker = new VBox(bankerCards, cards2);
+		HBox centerScreen = new HBox(totalMenu,space6, player,space7, banker);
+		centerScreen.setAlignment(Pos.CENTER);
+		pane.setLeft(centerScreen);
 
 
 
