@@ -120,61 +120,65 @@ public class BaccaratGame extends Application {
 			// : tieBetAmount.getText() != null ? Integer.valueOf(tieBetAmount.getText())
 			// : bankerBetAmount.getText() != null ?
 			// Integer.valueOf(bankerBetAmount.getText()) : 0;
-			this.theDealer.shuffleDeck();
-			this.playerHand = this.theDealer.dealHand();
-			this.bankerHand = this.theDealer.dealHand();
-			// this.theDealer.print();
-			intBankerTotal.setText(String.valueOf(logic.handTotal(this.bankerHand)));
-			intPlayerTotal.setText(String.valueOf(logic.handTotal(this.playerHand)));
-			// check draw one
-			// player
-			if (logic.evaluatePlayerDraw(this.playerHand)) {
-				this.playerHand.add(this.theDealer.drawOne());
+			if (currentBet <= this.currentBalance) {
+				this.theDealer.shuffleDeck();
+				this.playerHand = this.theDealer.dealHand();
+				this.bankerHand = this.theDealer.dealHand();
+				// this.theDealer.print();
+				intBankerTotal.setText(String.valueOf(logic.handTotal(this.bankerHand)));
 				intPlayerTotal.setText(String.valueOf(logic.handTotal(this.playerHand)));
-			}
-
-			// banker
-			if (this.playerHand.size() > 2) {
-				if (logic.evaluateBankerDraw(this.playerHand, this.playerHand.get(2))) {
-					this.bankerHand.add(this.theDealer.drawOne());
-					intBankerTotal.setText(String.valueOf(logic.handTotal(this.bankerHand)));
+				// check draw one
+				// player
+				if (logic.evaluatePlayerDraw(this.playerHand)) {
+					this.playerHand.add(this.theDealer.drawOne());
+					intPlayerTotal.setText(String.valueOf(logic.handTotal(this.playerHand)));
 				}
-			} else {
-				if (logic.evaluateBankerDraw(this.playerHand, null)) {
-					this.bankerHand.add(this.theDealer.drawOne());
-					intBankerTotal.setText(String.valueOf(logic.handTotal(this.bankerHand)));
+
+				// banker
+				if (this.playerHand.size() > 2) {
+					if (logic.evaluateBankerDraw(this.playerHand, this.playerHand.get(2))) {
+						this.bankerHand.add(this.theDealer.drawOne());
+						intBankerTotal.setText(String.valueOf(logic.handTotal(this.bankerHand)));
+					}
+				} else {
+					if (logic.evaluateBankerDraw(this.playerHand, null)) {
+						this.bankerHand.add(this.theDealer.drawOne());
+						intBankerTotal.setText(String.valueOf(logic.handTotal(this.bankerHand)));
+					}
 				}
-			}
 
-			// calculate who won and either append or dont append winnings to current
-			// balance.
-			String whoWon = logic.handTotal(this.bankerHand) > logic.handTotal(this.playerHand) ? "B"
-					: logic.handTotal(this.bankerHand) < logic.handTotal(this.playerHand) ? "P" : "T";
-			System.out.println("who won: " + whoWon + "\nbet on: " + betOn);
-			if (whoWon.equals(betOn) && whoWon.equals("T")) {
-				this.currentBalance += (currentBet * 8);
-				this.totalWinnings += (currentBet * 8);
-			} else if (whoWon.equals(betOn) && whoWon.equals("P")) {
-				this.currentBalance += currentBet;
-				this.totalWinnings += currentBet;
-			} else if (whoWon.equals(betOn) && whoWon.equals("B")) {
-				this.currentBalance += (currentBet * 1.05);
-				this.totalWinnings += (currentBet * 1.05);
+				// calculate who won and either append or dont append winnings to current
+				// balance.
+				String whoWon = logic.handTotal(this.bankerHand) > logic.handTotal(this.playerHand) ? "B"
+						: logic.handTotal(this.bankerHand) < logic.handTotal(this.playerHand) ? "P" : "T";
+				System.out.println("who won: " + whoWon + "\nbet on: " + betOn);
+				if (whoWon.equals(betOn) && whoWon.equals("T")) {
+					this.currentBalance += (currentBet * 8);
+					this.totalWinnings += (currentBet * 8);
+				} else if (whoWon.equals(betOn) && whoWon.equals("P")) {
+					this.currentBalance += currentBet;
+					this.totalWinnings += currentBet;
+				} else if (whoWon.equals(betOn) && whoWon.equals("B")) {
+					this.currentBalance += (currentBet * 1.05);
+					this.totalWinnings += (currentBet * 1.05);
+				} else {
+					this.currentBalance -= currentBet;
+				}
+				intBalance.setText("$" + String.valueOf(this.currentBalance));
+				intWinnings.setText("$" + String.valueOf(this.totalWinnings));
+				this.roundNumber++;
+				for (int i = 0; i < this.playerHand.size(); i++) {
+					System.out.println("Player Hand: " + this.playerHand.get(i).value);
+				}
+				for (int i = 0; i < this.bankerHand.size(); i++) {
+					System.out.println("Banker Hand: " + this.bankerHand.get(i).value);
+
+				}
+				System.out.println("Round: " + this.roundNumber);
+
 			} else {
-				this.currentBalance -= currentBet;
+				System.out.println("DONT HAVE ENOUGH BREAD U GAMBLING DEGENERATE");
 			}
-			intBalance.setText("$" + String.valueOf(this.currentBalance));
-			intWinnings.setText("$" + String.valueOf(this.totalWinnings));
-			this.roundNumber++;
-
-			for (int i = 0; i < this.playerHand.size(); i++) {
-				System.out.println("Player Hand: " + this.playerHand.get(i).value);
-			}
-			for (int i = 0; i < this.bankerHand.size(); i++) {
-				System.out.println("Banker Hand: " + this.bankerHand.get(i).value);
-			}
-			System.out.println("Round: " + this.roundNumber);
-
 		});
 		playerBet.setOnAction(e -> {
 			playerBetAmount.setPromptText("");
