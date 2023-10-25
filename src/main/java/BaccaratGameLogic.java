@@ -32,21 +32,65 @@ public class BaccaratGameLogic {
     }
 
     public boolean evaluateBankerDraw(ArrayList<Card> hand, Card playerCard) {
+
         int total = handTotal(hand);
-        if (total >= 7)
-            return false; // do not draw, stand
-        else if (total == 0 || total == 1 || total == 2)
-            return true; // draw another card
-        else if ((total == 3 || total == 4 || total == 5) && playerDrew && playerCard.value == 0)
-            return true;
-        else if (total == 3 && (playerCard.value != 8 || !playerDrew))
-            return true;
-        else if (total == 4 && (!playerDrew || (playerCard.value >= 2 && playerCard.value <= 7)))
-            return true;
-        else if (total == 5 && (!playerDrew || (playerCard.value >= 4 && playerCard.value <= 7)))
-            return true;
-        else if (total == 6 && playerDrew && (playerCard.value == 6 || playerCard.value == 7))
-            return true;
+
+        if (playerDrew) {
+            if (playerCard.value >= 10 && total <= 3) {
+                return true;
+            }
+            if (playerCard.value == 1 && total <= 3) {
+                return true;
+            }
+            if (playerCard.value == 2 && total <= 4) {
+                return true;
+            }
+            if (playerCard.value == 3 && total <= 4) {
+                return true;
+
+            }
+            if (playerCard.value == 4 && total <= 5) {
+                return true;
+            }
+            if (playerCard.value == 5 && total <= 5) {
+                return true;
+            }
+            if (playerCard.value == 6 && total <= 6) {
+                return true;
+            }
+            if (playerCard.value == 7 && total <= 6) {
+                return true;
+            }
+            if (playerCard.value == 8 && total <= 2) {
+                return true;
+            }
+            if (playerCard.value == 9 && total <= 3) {
+                return true;
+            }
+        } else {
+            if (total <= 5) {
+                return true;
+            }
+        }
+        // return false;
+        // if (total >= 7)
+        // return false; // do not draw, stand
+        // else if (total == 0 || total == 1 || total == 2)
+        // return true; // draw another card
+        // else if ((total == 3 || total == 4 || total == 5) && playerDrew &&
+        // playerCard.value == 0)
+        // return true;
+        // else if (total == 3 && (playerCard.value != 8 || !playerDrew))
+        // return true;
+        // else if (total == 4 && (!playerDrew || (playerCard.value >= 2 &&
+        // playerCard.value <= 7)))
+        // return true;
+        // else if (total == 5 && (!playerDrew || (playerCard.value >= 4 &&
+        // playerCard.value <= 7)))
+        // return true;
+        // else if (total == 6 && playerDrew && (playerCard.value == 6 ||
+        // playerCard.value == 7))
+        // return true;
         return false;
     }
 

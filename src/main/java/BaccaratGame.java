@@ -272,11 +272,14 @@ public class BaccaratGame extends Application {
 						this.currentBalance += currentBet;
 						this.totalWinnings += currentBet;
 					} else if (whoWon.equals(betOn) && whoWon.equals("B")) {
-						this.currentBalance += (currentBet * 1.05);
-						this.totalWinnings += (currentBet * 1.05);
+						this.currentBalance += (currentBet * 0.95);
+						this.totalWinnings += (currentBet * 0.95);
+					} else if (whoWon.equals("T")) {
+						// do nothing its a push
 					} else {
 						this.currentBalance -= currentBet;
 					}
+					// if tie player banker lose no money
 					intBalance.setText("$" + String.valueOf(this.currentBalance));
 					intWinnings.setText("$" + String.valueOf(this.totalWinnings));
 					this.roundNumber++;
