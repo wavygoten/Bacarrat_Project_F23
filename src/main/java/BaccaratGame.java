@@ -1,6 +1,5 @@
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 
@@ -23,21 +22,13 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class BaccaratGame extends Application {
+	private ArrayList<Card> deck = new ArrayList<>();
 	private ArrayList<Card> playerHand = new ArrayList<>();
 	private ArrayList<Card> bankerHand = new ArrayList<>();
 	private BaccaratDealer theDealer = new BaccaratDealer();
 	private int roundNumber = 1;
 	private double currentBalance = 100;
 	private double totalWinnings = 0;
-
-	public double evaluateWinnings() {
-
-		double win = 0;
-
-		return win;
-
-		// do this bc ration multiplication
-	}
 
 	private String getCardImage(Card card) {
 		String cardValue = Integer.toString(card.value); // convert card integer value to string
@@ -56,7 +47,6 @@ public class BaccaratGame extends Application {
 	public void start(Stage primaryStage) throws Exception {
 		// TODO Auto-generated method stub
 		primaryStage.setTitle("Baccarat Game");
-		BorderPane pane = new BorderPane();
 
 		Button playerBet = new Button("Player Bet");
 		TextField playerBetAmount = new TextField("");
@@ -96,7 +86,6 @@ public class BaccaratGame extends Application {
 		Label intBalance = new Label("$" + String.valueOf(this.currentBalance));
 		Label round = new Label("Round");
 		Label roundNumber = new Label(String.valueOf(this.roundNumber));
-		// intBalance.setT
 		Region spacing1 = new Region();
 		spacing1.setPrefHeight(20);
 		Region spacing2 = new Region();
@@ -107,8 +96,6 @@ public class BaccaratGame extends Application {
 		sp4.setPrefHeight(20);
 		VBox totalMenu = new VBox(bankerTotal, intBankerTotal, spacing1, playerTotal, intPlayerTotal, spacing2,
 				winnings, intWinnings, spacing3, balance, intBalance, sp4, round, roundNumber);
-
-		// Card test = new Card("Spades", 13);
 
 		ImageView playerCardOneView = new ImageView();
 		ImageView playerCardTwoView = new ImageView();
@@ -155,12 +142,11 @@ public class BaccaratGame extends Application {
 		VBox banker = new VBox(bankerCards, cards2);
 		HBox centerScreen = new HBox(totalMenu, space6, player, space7, banker);
 		centerScreen.setAlignment(Pos.CENTER);
+		BorderPane pane = new BorderPane();
 		pane.setLeft(centerScreen);
-		// totalMenu.setAlignment(Pos.CENTER);
 		pane.setTop(mb);
 		pane.setBottom(bottomBar);
 		Scene scene = new Scene(pane, 700, 700);
-		scene.getStylesheets().add("styles.css");
 		primaryStage.setScene(scene);
 		primaryStage.show();
 
@@ -221,6 +207,7 @@ public class BaccaratGame extends Application {
 					playerCardTwoView.setImage(playerCardTwo);
 					bankerCardOneView.setImage(bankerCardOne);
 					bankerCardTwoView.setImage(bankerCardTwo);
+
 					// player
 					if (logic.evaluatePlayerDraw(this.playerHand)) {
 						this.playerHand.add(this.theDealer.drawOne());
@@ -257,10 +244,9 @@ public class BaccaratGame extends Application {
 				} catch (FileNotFoundException error) {
 					error.printStackTrace();
 					System.out.println("File not found");
-					// TODO: handle exception
-				} catch (IOException error) {
+				} catch (Exception error) {
 					error.printStackTrace();
-					System.out.println("IO Error");
+					System.out.println("Some Error");
 				} finally {
 					String whoWon = logic.handTotal(this.bankerHand) > logic.handTotal(this.playerHand) ? "B"
 							: logic.handTotal(this.bankerHand) < logic.handTotal(this.playerHand) ? "P" : "T";
@@ -276,10 +262,10 @@ public class BaccaratGame extends Application {
 						this.totalWinnings += (currentBet * 0.95);
 					} else if (whoWon.equals("T")) {
 						// do nothing its a push
+						// if tie player banker lose no money
 					} else {
 						this.currentBalance -= currentBet;
 					}
-					// if tie player banker lose no money
 					intBalance.setText("$" + String.valueOf(this.currentBalance));
 					intWinnings.setText("$" + String.valueOf(this.totalWinnings));
 					this.roundNumber++;
@@ -295,7 +281,7 @@ public class BaccaratGame extends Application {
 					System.out.println("Round: " + this.roundNumber);
 				}
 			} else {
-				System.out.println("DONT HAVE ENOUGH BREAD U GAMBLING DEGENERATE");
+				System.out.println("You don't have enough money to play this bet amount.");
 			}
 		});
 		playerBetAmount.textProperty().addListener((observable, oldVal, newVal) -> {
@@ -368,7 +354,6 @@ public class BaccaratGame extends Application {
 			bankerCardTwoView.setImage(null);
 			bankerCardThreeView.setImage(null);
 			playButton.setDisable(true);
-			// playButton.fire();
 		});
 
 	}

@@ -63,7 +63,6 @@ public class BaccaratDealer {
     public void shuffleDeck() {
         generateDeck();
         int shuffleCount = (int) (Math.random() * 10) + 1;
-        // System.out.println(shuffleCount);
         for (int i = 0; i < shuffleCount; i++) {
             Collections.shuffle(deck);
         }
