@@ -22,12 +22,14 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class BaccaratGame extends Application {
-	private ArrayList<Card> playerHand = new ArrayList<>();
-	private ArrayList<Card> bankerHand = new ArrayList<>();
-	private BaccaratDealer theDealer = new BaccaratDealer();
-	private int roundNumber = 1;
-	private double currentBalance = 100;
-	private double totalWinnings = 0;
+
+	/* Data Members */
+	private ArrayList<Card> playerHand;
+	private ArrayList<Card> bankerHand;
+	private BaccaratDealer theDealer;
+	private int roundNumber;
+	private double currentBalance;
+	private double totalWinnings;
 
 	/* Layout Components */
 
@@ -56,8 +58,15 @@ public class BaccaratGame extends Application {
 	private ImageView bankerCardTwoView;
 	private ImageView bankerCardThreeView;
 
-	// default constructor
+	// constructor
 	public BaccaratGame() {
+		playerHand = new ArrayList<>();
+		bankerHand = new ArrayList<>();
+		theDealer = new BaccaratDealer();
+		roundNumber = 1;
+		currentBalance = 100;
+		totalWinnings = 0;
+
 		playerBet = new Button("Player Bet");
 		playerBetAmount = new TextField("");
 		playerBetAmount.setPromptText("$0");
@@ -117,13 +126,6 @@ public class BaccaratGame extends Application {
 
 	}
 
-	private String getCardImage(Card card) {
-		String cardValue = Integer.toString(card.value); // convert card integer value to string
-		String cardString = "/" + cardValue + card.suite + ".png"; // concatenate int string to suite string to be used
-																	// as a file path
-		return cardString;
-	}
-
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		launch(args);
@@ -166,11 +168,14 @@ public class BaccaratGame extends Application {
 		pane.setLeft(centerScreen);
 		pane.setTop(mb);
 		pane.setBottom(bottomBar);
+
+		/* Layout */
+
 		Scene scene = new Scene(pane, 700, 700);
 		primaryStage.setScene(scene);
 		primaryStage.show();
 
-		// button functions below
+		// button/textfield handlers below
 		playerBetAmount.textProperty().addListener((observable, oldVal, newVal) -> {
 			playButton.setDisable(false);
 		});
@@ -185,10 +190,12 @@ public class BaccaratGame extends Application {
 		tieBet.setOnAction(e -> tieBetButton(e));
 		bankerBet.setOnAction(e -> bankerBetButton(e));
 		re.setOnAction(e -> restartButton(e));
-		exit.setOnAction(e -> exit(e));
+		exit.setOnAction(e -> exitButton(e));
 	}
 
-	public void playerBetButton(ActionEvent event) {
+	/* Button Functions */
+
+	private void playerBetButton(ActionEvent event) {
 		playerBetAmount.setPromptText("");
 		playerBetAmount.setDisable(false);
 		tieBetAmount.setPromptText("$0");
@@ -199,7 +206,7 @@ public class BaccaratGame extends Application {
 		bankerBetAmount.setText(null);
 	}
 
-	public void tieBetButton(ActionEvent event) {
+	private void tieBetButton(ActionEvent event) {
 		playerBetAmount.setPromptText("$0");
 		playerBetAmount.setDisable(true);
 		playerBetAmount.setText(null);
@@ -210,7 +217,7 @@ public class BaccaratGame extends Application {
 		bankerBetAmount.setText(null);
 	}
 
-	public void bankerBetButton(ActionEvent event) {
+	private void bankerBetButton(ActionEvent event) {
 		playerBetAmount.setPromptText("$0");
 		playerBetAmount.setDisable(true);
 		playerBetAmount.setText(null);
@@ -221,29 +228,36 @@ public class BaccaratGame extends Application {
 		bankerBetAmount.setDisable(false);
 	}
 
-	// handle the game logic
-	public void playButton(ActionEvent event) {
+	private void playButton(ActionEvent event) {
 		BaccaratGameLogic logic = new BaccaratGameLogic();
 		String betOn = "";
 		double currentBet = 0;
 		try {
 			if (playerBetAmount.getText() == null && tieBetAmount.getText() == null) {
-				currentBet = Integer.valueOf(bankerBetAmount.getText());
+				currentBet = Double.valueOf(bankerBetAmount.getText());
 				betOn = "B";
 			} else if (playerBetAmount.getText() == null && bankerBetAmount.getText() == null) {
-				currentBet = Integer.valueOf(tieBetAmount.getText());
+				currentBet = Double.valueOf(tieBetAmount.getText());
 				betOn = "T";
 			} else {
-				currentBet = Integer.valueOf(playerBetAmount.getText());
+				currentBet = Double.valueOf(playerBetAmount.getText());
 				betOn = "P";
 			}
 		} catch (NumberFormatException e) {
 			System.out.println("Must enter a bet");
+			// this exits the event early
 			event.consume();
 			return;
-			// TODO: handle exception
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-
+		// if no bet was entered
+		if (currentBet <= 0) {
+			System.out.println("Must enter an amount greater than 0");
+			// this exits the event early
+			event.consume();
+			return;
+		}
 		if (currentBet <= currentBalance) {
 			theDealer.shuffleDeck();
 			playerHand = theDealer.dealHand();
@@ -350,13 +364,15 @@ public class BaccaratGame extends Application {
 							+ bankerHand.get(i).suite);
 				}
 				System.out.println("Round: " + roundNumber);
+				System.out.println("Current Balance: " + String.valueOf(currentBalance));
+				System.out.println("Total Winnings: " + String.valueOf(totalWinnings));
 			}
 		} else {
 			System.out.println("You don't have enough money to play this bet amount.");
 		}
 	}
 
-	public void restartButton(ActionEvent event) {
+	private void restartButton(ActionEvent event) {
 		currentBalance = 100;
 		totalWinnings = 0;
 		bankerHand.clear();
@@ -385,9 +401,16 @@ public class BaccaratGame extends Application {
 		playButton.setDisable(true);
 	}
 
-	public void exit(ActionEvent e) {
+	private void exitButton(ActionEvent event) {
 		Platform.exit();
 		System.exit(0);
 	}
 
+	/* Helper Functions */
+	private String getCardImage(Card card) {
+		String cardValue = Integer.toString(card.value); // convert card integer value to string
+		String cardString = "/" + cardValue + card.suite + ".png"; // concatenate int string to suite string to be used
+																	// as a file path
+		return cardString;
+	}
 }
