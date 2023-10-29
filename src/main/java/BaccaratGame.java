@@ -63,24 +63,13 @@ public class BaccaratGame extends Application {
 
 	private Scene scene;
 
-	private String mainPanelCSS;
-	private String labelCSS;
 	private String buttonCSS;
 	private String textAreaCSS;
 	private String inputCSS;
 
 	// constructor
 	public BaccaratGame() {
-		// mainPanelCSS = "-fx-background-color: rgb(33, 33, 33);";
-		// labelCSS = "-fx-text-fill: rgb(255, 255, 255);";
-		// buttonCSS = "-fx-background-color: rgb(0,113,231);-fx-text-fill:
-		// rgb(255,255,255);-fx-padding: 8;";
-		// textAreaCSS = "-fx-opacity: 1.0;-fx-control-inner-background: rgb(43, 43,
-		// 43); -fx-text-fill:rgb(255, 255, 255);";
-		// inputCSS = "-fx-background-color: rgb(43, 43, 43);-fx-opacity:
-		// 1.0;-fx-text-fill: rgb(255,255,255);-fx-padding: 8;";
-		mainPanelCSS = "";
-		labelCSS = "";
+
 		buttonCSS = "-fx-background-color: rgb(0,113,231);-fx-text-fill: rgb(255,255,255);-fx-padding: 8;";
 		textAreaCSS = "-fx-opacity: 1.0;";
 		inputCSS = "-fx-opacity: 1.0;";
@@ -125,11 +114,6 @@ public class BaccaratGame extends Application {
 		intWinnings = new Label("$" + String.valueOf(totalWinnings));
 		intBalance = new Label("$" + String.valueOf(currentBalance));
 		rN = new Label(String.valueOf(roundNumber));
-		intBankerTotal.setStyle(labelCSS);
-		intPlayerTotal.setStyle(labelCSS);
-		intWinnings.setStyle(labelCSS);
-		intBalance.setStyle(labelCSS);
-		rN.setStyle(labelCSS);
 		message = new TextArea(currentMessage);
 
 		message.setDisable(true);
@@ -198,11 +182,6 @@ public class BaccaratGame extends Application {
 		Label winnings = new Label("Winnings");
 		Label balance = new Label("Balance");
 		Label round = new Label("Round");
-		bankerTotal.setStyle(labelCSS);
-		playerTotal.setStyle(labelCSS);
-		winnings.setStyle(labelCSS);
-		balance.setStyle(labelCSS);
-		round.setStyle(labelCSS);
 		VBox bankerMenuItem = new VBox(10, bankerTotal, intBankerTotal);
 		VBox playerMenuItem = new VBox(10, playerTotal, intPlayerTotal);
 		VBox winningsMenuItem = new VBox(10, winnings, intWinnings);
@@ -213,8 +192,6 @@ public class BaccaratGame extends Application {
 		HBox cards2 = new HBox(10, bankerCardOneView, bankerCardTwoView, bankerCardThreeView);
 		Label playerCards = new Label("Player");
 		Label bankerCards = new Label("Banker");
-		playerCards.setStyle(labelCSS);
-		bankerCards.setStyle(labelCSS);
 		VBox player = new VBox(20, playerCards, cards1);
 		VBox banker = new VBox(20, bankerCards, cards2);
 		// GridPane player = new GridPane(playerCards,cards1);
@@ -231,12 +208,6 @@ public class BaccaratGame extends Application {
 		VBox mainPanel = new VBox(10, mb, gamePanel, message, betsPanel);
 
 		/* Layout */
-
-		mainPanel.setStyle(mainPanelCSS);
-
-		// mainPanel.getChildren().forEach(e -> {
-		// e.setStyle(labelCSS);
-		// });
 
 		scene = new Scene(mainPanel, 700, 700);
 		primaryStage.setScene(scene);
