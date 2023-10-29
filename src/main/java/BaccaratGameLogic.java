@@ -9,8 +9,6 @@ public class BaccaratGameLogic {
             return "Draw.";
         } else if (playerTotal > bankerTotal) {
             return "Player.";
-        } else if (playerTotal == 0) {
-            return "Player.";
         } else {
             return "Banker.";
         }
