@@ -47,7 +47,6 @@ public class BaccaratGame extends Application {
 	private MenuItem exit;
 	private MenuItem re;
 	private MenuItem htp;
-	private MenuItem dm;
 
 	private Label intBankerTotal;
 	private Label intPlayerTotal;
@@ -121,7 +120,6 @@ public class BaccaratGame extends Application {
 		exit = new MenuItem("Exit");
 		re = new MenuItem("Fresh Start");
 		htp = new MenuItem("How to Play");
-		dm = new MenuItem("Dark Mode");
 		intBankerTotal = new Label("0");
 		intPlayerTotal = new Label("0");
 		intWinnings = new Label("$" + String.valueOf(totalWinnings));
@@ -194,7 +192,7 @@ public class BaccaratGame extends Application {
 		MenuBar mb = new MenuBar();
 		Menu options = new Menu("Options");
 		mb.getMenus().add(options);
-		options.getItems().addAll(exit, re, htp, dm);
+		options.getItems().addAll(exit, re, htp);
 		Label bankerTotal = new Label("Banker total");
 		Label playerTotal = new Label("Player total");
 		Label winnings = new Label("Winnings");
@@ -260,6 +258,7 @@ public class BaccaratGame extends Application {
 		bankerBet.setOnAction(e -> bankerBetButton(e));
 		re.setOnAction(e -> restartButton(e));
 		exit.setOnAction(e -> exitButton(e));
+		htp.setOnAction(e -> htpButton(e));
 	}
 
 	/* Button Functions */
@@ -420,14 +419,14 @@ public class BaccaratGame extends Application {
 				// need to handle full logic not finished
 				if (whoWon.equals(betOn) && whoWon.equals("T")) {
 					currentBalance += (currentBet * 8);
-					totalWinnings += (currentBet * 8);
+					totalWinnings = evaluateWinnings(currentBet * 8);
 					message.setText("Player Total: " + logic.handTotal(playerHand) + "\nBanker Total: "
 							+ logic.handTotal(bankerHand) + "\n" + //
 							"It's a tie\n" + //
 							"Congrats, you bet on a Tie! You win!");
 				} else if (whoWon.equals(betOn) && whoWon.equals("P")) {
 					currentBalance += currentBet;
-					totalWinnings += currentBet;
+					totalWinnings = evaluateWinnings(currentBet);
 					message.setText("Player Total: " + logic.handTotal(playerHand) + "\nBanker Total: "
 							+ logic.handTotal(bankerHand) + "\n" + //
 							"Player wins\n" + //
@@ -435,7 +434,7 @@ public class BaccaratGame extends Application {
 
 				} else if (whoWon.equals(betOn) && whoWon.equals("B")) {
 					currentBalance += (currentBet * 0.95);
-					totalWinnings += (currentBet * 0.95);
+					totalWinnings = evaluateWinnings(currentBet * 0.95);
 					message.setText("Player Total: " + logic.handTotal(playerHand) + "\nBanker Total: "
 							+ logic.handTotal(bankerHand) + "\n" + //
 							"Banker wins\n" + //
@@ -527,11 +526,20 @@ public class BaccaratGame extends Application {
 		System.exit(0);
 	}
 
+	private void htpButton(ActionEvent event) {
+		String howString = "To play this game\n1. Please click on one of the buttons : Player Bet, Tie Bet, or Banker Bet\n2. Then input the amount you would like to bet. For example to bet $4 please input 4 into the input field.\n3. Lastly press the play game button to start. Have fun!";
+		message.setText(howString);
+	}
+
 	/* Helper Functions */
 	private String getCardImage(Card card) {
 		String cardValue = Integer.toString(card.value); // convert card integer value to string
 		String cardString = "/" + cardValue + card.suite + ".png"; // concatenate int string to suite string to be used
 																	// as a file path
 		return cardString;
+	}
+
+	private Double evaluateWinnings(double winnings) {
+		return totalWinnings += winnings;
 	}
 }
