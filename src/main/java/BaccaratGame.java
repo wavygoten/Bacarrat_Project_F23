@@ -6,17 +6,17 @@ import java.util.ArrayList;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
-import javafx.geometry.Pos;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -30,6 +30,7 @@ public class BaccaratGame extends Application {
 	private int roundNumber;
 	private double currentBalance;
 	private double totalWinnings;
+	private String currentMessage;
 
 	/* Layout Components */
 
@@ -41,6 +42,7 @@ public class BaccaratGame extends Application {
 	private TextField playerBetAmount;
 	private TextField tieBetAmount;
 	private TextField bankerBetAmount;
+	private TextArea message;
 
 	private MenuItem exit;
 	private MenuItem re;
@@ -60,12 +62,15 @@ public class BaccaratGame extends Application {
 
 	// constructor
 	public BaccaratGame() {
+		// initialize all components
 		playerHand = new ArrayList<>();
 		bankerHand = new ArrayList<>();
 		theDealer = new BaccaratDealer();
 		roundNumber = 1;
 		currentBalance = 100;
 		totalWinnings = 0;
+		currentMessage = "";
+		theDealer.shuffleDeck();
 
 		playerBet = new Button("Player Bet");
 		playerBetAmount = new TextField("");
@@ -90,9 +95,12 @@ public class BaccaratGame extends Application {
 		re = new MenuItem("Fresh Start");
 		intBankerTotal = new Label("0");
 		intPlayerTotal = new Label("0");
-		intWinnings = new Label("$0.0");
+		intWinnings = new Label("$" + String.valueOf(totalWinnings));
 		intBalance = new Label("$" + String.valueOf(currentBalance));
 		rN = new Label(String.valueOf(roundNumber));
+		message = new TextArea(currentMessage);
+		message.setDisable(true);
+		message.setStyle("-fx-opacity: 1.0;");
 		playerCardOneView = new ImageView();
 		playerCardTwoView = new ImageView();
 		playerCardThreeView = new ImageView();
@@ -139,10 +147,13 @@ public class BaccaratGame extends Application {
 
 		/* Layout */
 
-		VBox playerVbox = new VBox(playerBet, playerBetAmount);
-		VBox tieVbox = new VBox(tieBet, tieBetAmount);
-		VBox bankerVbox = new VBox(bankerBet, bankerBetAmount);
-		HBox bottomBar = new HBox(playerVbox, tieVbox, bankerVbox, playButton);
+		// 1 vbox in scene
+		// 4 hboxes - options, game panel, message box, better area
+		// options - menu bar
+		// game panel - vbox data, vbox + gridpane
+		// message box - message dialog box?
+		// bets area - 3 vbox each bet, play button
+		// do spacing later
 		MenuBar mb = new MenuBar();
 		Menu options = new Menu("Options");
 		mb.getMenus().add(options);
@@ -152,26 +163,33 @@ public class BaccaratGame extends Application {
 		Label winnings = new Label("Winnings");
 		Label balance = new Label("Balance");
 		Label round = new Label("Round");
-
-		VBox totalMenu = new VBox(bankerTotal, intBankerTotal, playerTotal, intPlayerTotal,
-				winnings, intWinnings, balance, intBalance, round, rN);
-
-		HBox cards1 = new HBox(playerCardOneView, playerCardTwoView, playerCardThreeView);
-		HBox cards2 = new HBox(bankerCardOneView, bankerCardTwoView, bankerCardThreeView);
+		VBox bankerMenuItem = new VBox(10, bankerTotal, intBankerTotal);
+		VBox playerMenuItem = new VBox(10, playerTotal, intPlayerTotal);
+		VBox winningsMenuItem = new VBox(10, winnings, intWinnings);
+		VBox balanceMenuItem = new VBox(10, balance, intBalance);
+		VBox roundMenuItem = new VBox(10, round, rN);
+		VBox totalMenu = new VBox(30, bankerMenuItem, playerMenuItem, winningsMenuItem, balanceMenuItem, roundMenuItem);
+		HBox cards1 = new HBox(10, playerCardOneView, playerCardTwoView, playerCardThreeView);
+		HBox cards2 = new HBox(10, bankerCardOneView, bankerCardTwoView, bankerCardThreeView);
 		Label playerCards = new Label("Player");
 		Label bankerCards = new Label("Banker");
 		VBox player = new VBox(playerCards, cards1);
 		VBox banker = new VBox(bankerCards, cards2);
-		HBox centerScreen = new HBox(totalMenu, player, banker);
-		centerScreen.setAlignment(Pos.CENTER);
-		BorderPane pane = new BorderPane();
-		pane.setLeft(centerScreen);
-		pane.setTop(mb);
-		pane.setBottom(bottomBar);
+		HBox innerGamePanel = new HBox(40, player, banker);
+		HBox gamePanel = new HBox(40, totalMenu, innerGamePanel);
+		gamePanel.setPadding(new Insets(0, 0, 50, 20));
+
+		VBox playerVbox = new VBox(10, playerBet, playerBetAmount);
+		VBox tieVbox = new VBox(10, tieBet, tieBetAmount);
+		VBox bankerVbox = new VBox(10, bankerBet, bankerBetAmount);
+		HBox betsPanel = new HBox(20, playerVbox, tieVbox, bankerVbox, playButton);
+		betsPanel.setPadding(new Insets(50, 0, 0, 0));
+
+		VBox mainPanel = new VBox(10, mb, gamePanel, message, betsPanel);
 
 		/* Layout */
 
-		Scene scene = new Scene(pane, 700, 700);
+		Scene scene = new Scene(mainPanel, 700, 700);
 		primaryStage.setScene(scene);
 		primaryStage.show();
 
@@ -229,6 +247,7 @@ public class BaccaratGame extends Application {
 	}
 
 	private void playButton(ActionEvent event) {
+		message.setText("");
 		BaccaratGameLogic logic = new BaccaratGameLogic();
 		String betOn = "";
 		double currentBet = 0;
@@ -245,6 +264,7 @@ public class BaccaratGame extends Application {
 			}
 		} catch (NumberFormatException e) {
 			System.out.println("Must enter a bet");
+			message.setText("Must enter a bet");
 			// this exits the event early
 			event.consume();
 			return;
@@ -254,12 +274,15 @@ public class BaccaratGame extends Application {
 		// if no bet was entered
 		if (currentBet <= 0) {
 			System.out.println("Must enter an amount greater than 0");
+			message.setText("Must enter an amount greater than 0");
 			// this exits the event early
 			event.consume();
 			return;
 		}
 		if (currentBet <= currentBalance) {
-			theDealer.shuffleDeck();
+			if (theDealer.deckSize() < 6) {
+				theDealer.shuffleDeck();
+			}
 			playerHand = theDealer.dealHand();
 			bankerHand = theDealer.dealHand();
 			intBankerTotal.setText(String.valueOf(logic.handTotal(bankerHand)));
@@ -336,18 +359,53 @@ public class BaccaratGame extends Application {
 				String whoWon = logic.handTotal(bankerHand) > logic.handTotal(playerHand) ? "B"
 						: logic.handTotal(bankerHand) < logic.handTotal(playerHand) ? "P" : "T";
 				System.out.println("who won: " + whoWon + "\nbet on: " + betOn);
+
+				// need to handle full logic not finished
 				if (whoWon.equals(betOn) && whoWon.equals("T")) {
 					currentBalance += (currentBet * 8);
 					totalWinnings += (currentBet * 8);
+					message.setText("Player Total: " + logic.handTotal(playerHand) + " Banker Total: "
+							+ logic.handTotal(bankerHand) + "\n" + //
+							"It's a tie\n" + //
+							"Congrats, you bet on a Tie! You win!");
 				} else if (whoWon.equals(betOn) && whoWon.equals("P")) {
 					currentBalance += currentBet;
 					totalWinnings += currentBet;
+					message.setText("Player Total: " + logic.handTotal(playerHand) + " Banker Total: "
+							+ logic.handTotal(bankerHand) + "\n" + //
+							"Player wins\n" + //
+							"Congrats, you bet Player! You win!");
+
 				} else if (whoWon.equals(betOn) && whoWon.equals("B")) {
 					currentBalance += (currentBet * 0.95);
 					totalWinnings += (currentBet * 0.95);
-				} else if (whoWon.equals("T")) {
+					message.setText("Player Total: " + logic.handTotal(playerHand) + " Banker Total: "
+							+ logic.handTotal(bankerHand) + "\n" + //
+							"Banker wins\n" + //
+							"Congrats, you bet Banker! You win!");
+
+				} else if (whoWon.equals("T") && !betOn.equals(whoWon)) {
+					String t = betOn.equals("P") ? "Player" : "Banker";
+					message.setText("Player Total: " + logic.handTotal(playerHand) + " Banker Total "
+							+ logic.handTotal(bankerHand) + "\n" + //
+							"It's a tie" + "\n" + //
+							"Sorry, you bet " + t + "! You lost your bet!");
 					// do nothing its a push
 					// if tie player banker lose no money
+				} else if (whoWon.equals("P") && !betOn.equals(whoWon)) {
+					String t = betOn.equals("B") ? "Banker" : "Tie";
+					currentBalance -= currentBet;
+					message.setText("Player Total: " + logic.handTotal(playerHand) + " Banker Total "
+							+ logic.handTotal(bankerHand) + "\n" + //
+							"Player wins" + "\n" + //
+							"Sorry, you bet " + t + "! You lost your bet!");
+				} else if (whoWon.equals("B") && !betOn.equals(whoWon)) {
+					String t = betOn.equals("P") ? "Player" : "Tie";
+					currentBalance -= currentBet;
+					message.setText("Player Total: " + logic.handTotal(playerHand) + " Banker Total "
+							+ logic.handTotal(bankerHand) + "\n" + //
+							"Banker wins" + "\n" + //
+							"Sorry, you bet " + t + "! You lost your bet!");
 				} else {
 					currentBalance -= currentBet;
 				}
@@ -369,6 +427,8 @@ public class BaccaratGame extends Application {
 			}
 		} else {
 			System.out.println("You don't have enough money to play this bet amount.");
+			message.setText("You don't have enough money to play this bet amount.");
+
 		}
 	}
 
@@ -381,6 +441,7 @@ public class BaccaratGame extends Application {
 		intWinnings.setText("$" + String.valueOf(totalWinnings));
 		intBalance.setText("$" + String.valueOf(currentBalance));
 		rN.setText(String.valueOf(roundNumber));
+		message.setText("");
 		intBankerTotal.setText("0");
 		intPlayerTotal.setText("0");
 		bankerBetAmount.setPromptText("$0");
