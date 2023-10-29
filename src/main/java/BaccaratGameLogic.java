@@ -6,11 +6,11 @@ public class BaccaratGameLogic {
         int playerTotal = handTotal(hand1);
         int bankerTotal = handTotal(hand2);
         if (playerTotal == bankerTotal) {
-            return "Draw.";
+            return "T";
         } else if (playerTotal > bankerTotal) {
-            return "Player.";
+            return "P";
         } else {
-            return "Banker.";
+            return "B";
         }
     }
 

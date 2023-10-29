@@ -384,9 +384,7 @@ public class BaccaratGame extends Application {
 				error.printStackTrace();
 				System.out.println("Some Error");
 			} finally {
-				String whoWon = logic.handTotal(bankerHand) > logic.handTotal(playerHand) ? "B"
-						: logic.handTotal(bankerHand) < logic.handTotal(playerHand) ? "P" : "T";
-
+				String whoWon = logic.whoWon(playerHand, bankerHand);
 				// need to handle full logic not finished
 				if (whoWon.equals(betOn) && whoWon.equals("T")) {
 					currentBalance += (currentBet * 8);
