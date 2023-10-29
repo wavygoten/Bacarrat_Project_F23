@@ -173,8 +173,9 @@ public class BaccaratGame extends Application {
 		HBox cards2 = new HBox(10, bankerCardOneView, bankerCardTwoView, bankerCardThreeView);
 		Label playerCards = new Label("Player");
 		Label bankerCards = new Label("Banker");
-		VBox player = new VBox(playerCards, cards1);
-		VBox banker = new VBox(bankerCards, cards2);
+		VBox player = new VBox(20, playerCards, cards1);
+		VBox banker = new VBox(20, bankerCards, cards2);
+		// GridPane player = new GridPane(playerCards,cards1);
 		HBox innerGamePanel = new HBox(40, player, banker);
 		HBox gamePanel = new HBox(40, totalMenu, innerGamePanel);
 		gamePanel.setPadding(new Insets(0, 0, 50, 20));
@@ -183,7 +184,7 @@ public class BaccaratGame extends Application {
 		VBox tieVbox = new VBox(10, tieBet, tieBetAmount);
 		VBox bankerVbox = new VBox(10, bankerBet, bankerBetAmount);
 		HBox betsPanel = new HBox(20, playerVbox, tieVbox, bankerVbox, playButton);
-		betsPanel.setPadding(new Insets(50, 0, 0, 0));
+		betsPanel.setPadding(new Insets(50, 0, 10, 0));
 
 		VBox mainPanel = new VBox(10, mb, gamePanel, message, betsPanel);
 
@@ -268,8 +269,15 @@ public class BaccaratGame extends Application {
 			// this exits the event early
 			event.consume();
 			return;
+		} catch (NullPointerException e) {
+			System.out.println("Must not be empty");
+			message.setText("Must not be empty");
+			event.consume();
+			return;
 		} catch (Exception e) {
 			e.printStackTrace();
+			event.consume();
+			return;
 		}
 		// if no bet was entered
 		if (currentBet <= 0) {
@@ -358,20 +366,19 @@ public class BaccaratGame extends Application {
 			} finally {
 				String whoWon = logic.handTotal(bankerHand) > logic.handTotal(playerHand) ? "B"
 						: logic.handTotal(bankerHand) < logic.handTotal(playerHand) ? "P" : "T";
-				System.out.println("who won: " + whoWon + "\nbet on: " + betOn);
 
 				// need to handle full logic not finished
 				if (whoWon.equals(betOn) && whoWon.equals("T")) {
 					currentBalance += (currentBet * 8);
 					totalWinnings += (currentBet * 8);
-					message.setText("Player Total: " + logic.handTotal(playerHand) + " Banker Total: "
+					message.setText("Player Total: " + logic.handTotal(playerHand) + "\nBanker Total: "
 							+ logic.handTotal(bankerHand) + "\n" + //
 							"It's a tie\n" + //
 							"Congrats, you bet on a Tie! You win!");
 				} else if (whoWon.equals(betOn) && whoWon.equals("P")) {
 					currentBalance += currentBet;
 					totalWinnings += currentBet;
-					message.setText("Player Total: " + logic.handTotal(playerHand) + " Banker Total: "
+					message.setText("Player Total: " + logic.handTotal(playerHand) + "\nBanker Total: "
 							+ logic.handTotal(bankerHand) + "\n" + //
 							"Player wins\n" + //
 							"Congrats, you bet Player! You win!");
@@ -379,38 +386,38 @@ public class BaccaratGame extends Application {
 				} else if (whoWon.equals(betOn) && whoWon.equals("B")) {
 					currentBalance += (currentBet * 0.95);
 					totalWinnings += (currentBet * 0.95);
-					message.setText("Player Total: " + logic.handTotal(playerHand) + " Banker Total: "
+					message.setText("Player Total: " + logic.handTotal(playerHand) + "\nBanker Total: "
 							+ logic.handTotal(bankerHand) + "\n" + //
 							"Banker wins\n" + //
 							"Congrats, you bet Banker! You win!");
 
 				} else if (whoWon.equals("T") && !betOn.equals(whoWon)) {
 					String t = betOn.equals("P") ? "Player" : "Banker";
-					message.setText("Player Total: " + logic.handTotal(playerHand) + " Banker Total "
+					message.setText("Player Total: " + logic.handTotal(playerHand) + "\nBanker Total: "
 							+ logic.handTotal(bankerHand) + "\n" + //
 							"It's a tie" + "\n" + //
-							"Sorry, you bet " + t + "! You lost your bet!");
+							"Sorry, you bet " + t + "! It's a push--You didn't lose your bet!");
 					// do nothing its a push
 					// if tie player banker lose no money
 				} else if (whoWon.equals("P") && !betOn.equals(whoWon)) {
 					String t = betOn.equals("B") ? "Banker" : "Tie";
 					currentBalance -= currentBet;
-					message.setText("Player Total: " + logic.handTotal(playerHand) + " Banker Total "
+					message.setText("Player Total: " + logic.handTotal(playerHand) + "\nBanker Total: "
 							+ logic.handTotal(bankerHand) + "\n" + //
 							"Player wins" + "\n" + //
 							"Sorry, you bet " + t + "! You lost your bet!");
 				} else if (whoWon.equals("B") && !betOn.equals(whoWon)) {
 					String t = betOn.equals("P") ? "Player" : "Tie";
 					currentBalance -= currentBet;
-					message.setText("Player Total: " + logic.handTotal(playerHand) + " Banker Total "
+					message.setText("Player Total: " + logic.handTotal(playerHand) + "\nBanker Total: "
 							+ logic.handTotal(bankerHand) + "\n" + //
 							"Banker wins" + "\n" + //
 							"Sorry, you bet " + t + "! You lost your bet!");
 				} else {
 					currentBalance -= currentBet;
 				}
-				intBalance.setText("$" + String.valueOf(currentBalance));
-				intWinnings.setText("$" + String.valueOf(totalWinnings));
+				intBalance.setText("$" + String.valueOf(Math.round(currentBalance * 100.0) / 100.0));
+				intWinnings.setText("$" + String.valueOf(Math.round(totalWinnings * 100.0) / 100.0));
 				roundNumber++;
 				rN.setText(String.valueOf(roundNumber));
 				for (int i = 0; i < playerHand.size(); i++) {
@@ -424,6 +431,8 @@ public class BaccaratGame extends Application {
 				System.out.println("Round: " + roundNumber);
 				System.out.println("Current Balance: " + String.valueOf(currentBalance));
 				System.out.println("Total Winnings: " + String.valueOf(totalWinnings));
+				System.out.println(message.getText());
+
 			}
 		} else {
 			System.out.println("You don't have enough money to play this bet amount.");
@@ -437,6 +446,7 @@ public class BaccaratGame extends Application {
 		totalWinnings = 0;
 		bankerHand.clear();
 		playerHand.clear();
+		theDealer.shuffleDeck();
 		roundNumber = 1;
 		intWinnings.setText("$" + String.valueOf(totalWinnings));
 		intBalance.setText("$" + String.valueOf(currentBalance));
