@@ -221,7 +221,6 @@ class MyTest {
 		Card testCard2 = new Card("Spades", 1);
 		playerHand.add(testCard1);
 		playerHand.add(testCard2);
-		System.out.println(logic.handTotal(playerHand));
 
 		ArrayList<Card> bankerHand = new ArrayList<>();
 		Card testCard3 = new Card("Spades", 4);
@@ -240,7 +239,6 @@ class MyTest {
 		Card testCard2 = new Card("Spades", 4);
 		playerHand.add(testCard1);
 		playerHand.add(testCard2);
-		System.out.println(logic.handTotal(playerHand));
 
 		ArrayList<Card> bankerHand = new ArrayList<>();
 		Card testCard3 = new Card("Spades", 4);
