@@ -72,15 +72,4 @@ public class BaccaratDealer {
     public int deckSize() {
         return deck.size();
     }
-
-    public void print() {
-        for (int a = 0; a < deckSize(); a++) {
-            System.out.print(deck.get(a).value);
-            System.out.print(" ");
-            System.out.println(deck.get(a).suite);
-
-        }
-        System.out.print("Deck Size: ");
-        System.out.print(deck.size());
-    }
 }
