@@ -507,7 +507,7 @@ public class BaccaratGame extends Application {
 		return cardString;
 	}
 
-	private Double evaluateWinnings(double winnings) {
+	public Double evaluateWinnings(double winnings) {
 		return totalWinnings += winnings;
 	}
 }
